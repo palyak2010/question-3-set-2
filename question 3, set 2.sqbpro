@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/Users/palyak/Downloads/Udacity/part 2/Project 3/chinook.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3339"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,5:mainAlbum"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">with t2 as
+(select a.ArtistId id, a.Name, c.CustomerId, c.FirstName, c.LastName,  count (InvoiceLineId) number_of_orders
+from track t
+join Album alb
+on t.AlbumId=alb.AlbumId
+join artist a
+on a.ArtistId=alb.ArtistId
+join InvoiceLine il
+on il.TrackId=t.TrackId
+join invoice i
+on i.InvoiceId=il.InvoiceId
+join Customer c
+on c.CustomerId=i.CustomerId
+group by 1,2,3,4,5
+order by 6 DESC),
+t1 as
+(select a.ArtistId id, a.Name, sum (il.UnitPrice) amnt_spent
+from track t
+join Album alb
+on t.AlbumId=alb.AlbumId
+join artist a
+on a.ArtistId=alb.ArtistId
+join InvoiceLine il
+on il.TrackId=t.TrackId
+GROUP by 1,2
+order by 3 desc)
+
+select t1.name, t2.CustomerId, t2.FirstName, t2.LastName, t1.amnt_spent*t2.number_of_orders as amount spent
+from t1
+join t2
+on t1.ArtistId=t2.ArtistId;
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
